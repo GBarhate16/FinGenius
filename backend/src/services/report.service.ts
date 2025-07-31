@@ -228,6 +228,12 @@ async function generateInsightsAI({
   periodLabel: string;
 }) {
   try {
+    // Check if AI is configured
+    if (!genAI) {
+      console.log("AI not configured, skipping insights generation");
+      return [];
+    }
+
     const prompt = reportInsightPrompt({
       totalIncome: convertToDollarUnit(totalIncome),
       totalExpenses: convertToDollarUnit(totalExpenses),
@@ -253,6 +259,7 @@ async function generateInsightsAI({
     const data = JSON.parse(cleanedText);
     return data;
   } catch (error) {
+    console.error("Error generating AI insights:", error);
     return [];
   }
 }

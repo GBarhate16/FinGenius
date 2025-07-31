@@ -8,7 +8,7 @@ export const reportApi = apiClient.injectEndpoints({
       query: (params) => {
         const { pageNumber = 1, pageSize = 20 } = params;
         return ({
-          url: "/report/all",
+          url: "/report",
           method: "GET",
           params: { pageNumber, pageSize },
         });
@@ -17,7 +17,7 @@ export const reportApi = apiClient.injectEndpoints({
 
     updateReportSetting: builder.mutation<void, UpdateReportSettingParams>({
       query: (payload) => ({
-        url: "/report/update-setting",
+        url: "/report/setting",
         method: "PUT",
         body: payload,
       }),

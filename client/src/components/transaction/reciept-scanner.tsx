@@ -71,7 +71,14 @@ const ReceiptScanner = ({
           toast.success("Receipt scanned successfully");
         })
         .catch((error) => {
-          toast.error(error.data?.message || "Failed to scan receipt");
+          const errorMessage = error.data?.message || "Failed to scan receipt";
+          
+          // Check if it's a configuration error
+          if (errorMessage.includes("not configured")) {
+            toast.error("AI receipt scanning is not set up. Please contact support to enable this feature.");
+          } else {
+            toast.error(errorMessage);
+          }
         })
         .finally(() => {
           clearInterval(interval);

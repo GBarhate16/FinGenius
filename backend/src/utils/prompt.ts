@@ -15,10 +15,11 @@ Analyze this receipt image (base64 encoded) and extract transaction details matc
 
 Rules:
 1. Amount must be positive
-2. Date must be valid and in ISO format
+2. Date must be valid and in ISO format (YYYY-MM-DD) - if date is not visible, use today's date
 3. Category must match our enum values
 4. If uncertain about any field, omit it
 5. If not a receipt, return {}
+6. ALWAYS include the date field, even if you have to estimate
 
 Example valid response:
 {

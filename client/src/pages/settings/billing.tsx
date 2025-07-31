@@ -15,8 +15,8 @@ const Billing = () => {
         {/* Current Plan */}
         {/* Upgrade Options */}
         <div className="mt-0">
-          <h1 className="text-lg font-medium mb-2">Support Us</h1>
-          <p className="text-base mb-2">
+          <h1 className="text-lg font-medium mb-2">This page is in development</h1>
+          {/* <p className="text-base mb-2">
             The Billing feature is part of the <strong>extended version</strong>{" "}
             of this project. It took <strong>weeks and months</strong> to
             design, build, and refine.
@@ -65,7 +65,7 @@ const Billing = () => {
             >
               Click Here
             </a>
-          </p>
+          </p> */}
           <br />
           <br />
         </div>

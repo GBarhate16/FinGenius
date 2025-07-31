@@ -28,6 +28,16 @@ export const transactionApi = apiClient.injectEndpoints({
       }),
     }),
 
+    getServiceConfig: builder.query<{
+      ai: { configured: boolean; message: string };
+      cloudinary: { configured: boolean; message: string };
+    }, void>({
+      query: () => ({
+        url: "/transaction/config/status",
+        method: "GET",
+      }),
+    }),
+
     getAllTransactions: builder.query<
       GetAllTransactionResponse,
       GetAllTransactionParams
@@ -116,6 +126,7 @@ export const {
   useCreateTransactionMutation,
   useGetAllTransactionsQuery,
   useAiScanReceiptMutation,
+  useGetServiceConfigQuery,
   useGetSingleTransactionQuery,
   useDuplicateTransactionMutation,
   useUpdateTransactionMutation,

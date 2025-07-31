@@ -193,7 +193,7 @@ export const summaryAnalyticsService = async (
 
     const [previous] = await TransactionModel.aggregate(prevPeriodPipeline);
 
-    console.log(previous, "Prvious Data");
+    console.log(previous, "Previous Data");
     if (previous) {
       const prevIncome = previous.totalIncome || 0;
       const prevExpenses = previous.totalExpenses || 0;
@@ -215,6 +215,8 @@ export const summaryAnalyticsService = async (
           balanceAmount: prevBalance,
         },
       };
+    } else {
+      console.log("No previous data found for comparison period");
     }
   }
 

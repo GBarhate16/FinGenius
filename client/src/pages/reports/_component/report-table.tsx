@@ -2,6 +2,8 @@ import { DataTable } from "@/components/data-table";
 import { reportColumns } from "./column";
 import { useState } from "react";
 import { useGetAllReportsQuery } from "@/features/report/reportAPI";
+import { EmptyState } from "@/components/empty-state";
+import { FileText } from "lucide-react";
 
 const ReportTable = () => {
   const [filter, setFilter] = useState({
@@ -26,9 +28,20 @@ const ReportTable = () => {
     setFilter((prev) => ({ ...prev, pageSize }));
   };
 
+  // Show empty state if no reports
+  if (!isFetching && (!data?.reports || data.reports.length === 0)) {
+    return (
+      <EmptyState
+        icon={FileText}
+        title="No Reports Yet"
+        description="Your monthly financial reports will appear here once they are generated. Reports are automatically created and emailed to you monthly."
+      />
+    );
+  }
+
   return (
     <DataTable
-      data={data?.reports || []} //data?.reports || []
+      data={data?.reports || []}
       columns={reportColumns}
       isLoading={isFetching}
       showSearch={false}

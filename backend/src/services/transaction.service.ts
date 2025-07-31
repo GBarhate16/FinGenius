@@ -267,9 +267,28 @@ export const scanReceiptService = async (
   if (!file) throw new BadRequestException("No file uploaded");
 
   try {
-    if (!file.path) throw new BadRequestException("failed to upload file");
+    console.log("🔍 Starting receipt scan...");
+    console.log("📁 File info:", { 
+      filename: file.filename, 
+      mimetype: file.mimetype, 
+      size: file.size,
+      path: file.path 
+    });
 
-    console.log(file.path);
+    // Check if AI is configured
+    if (!genAI) {
+      console.log("❌ AI not configured - GEMINI_API_KEY missing");
+      return { error: "AI receipt scanning is not configured. Please add GEMINI_API_KEY to your environment variables." };
+    }
+
+    // Check if Cloudinary is configured
+    if (!file.path) {
+      console.log("❌ Cloudinary not configured - missing credentials");
+      return { error: "File upload service is not configured. Please add Cloudinary credentials to your environment variables." };
+    }
+
+    console.log("✅ File uploaded successfully to:", file.path);
+    console.log("🤖 AI service is configured, processing with Gemini...");
 
     const responseData = await axios.get(file.path, {
       responseType: "arraybuffer",
@@ -277,6 +296,8 @@ export const scanReceiptService = async (
     const base64String = Buffer.from(responseData.data).toString("base64");
 
     if (!base64String) throw new BadRequestException("Could not process file");
+
+    console.log("📤 Sending to AI for analysis...");
 
     const result = await genAI.models.generateContent({
       model: genAIModel,
@@ -296,21 +317,29 @@ export const scanReceiptService = async (
     const response = result.text;
     const cleanedText = response?.replace(/```(?:json)?\n?/g, "").trim();
 
+    console.log("🤖 AI Response:", cleanedText);
+
     if (!cleanedText)
       return {
-        error: "Could not read reciept  content",
+        error: "Could not read receipt content",
       };
 
     const data = JSON.parse(cleanedText);
 
-    if (!data.amount || !data.date) {
-      return { error: "Reciept missing required information" };
+    if (!data.amount) {
+      console.log("❌ Missing amount in AI response:", data);
+      return { error: "Receipt missing required amount information" };
     }
+
+    // Use current date if AI couldn't extract the date
+    const receiptDate = data.date ? new Date(data.date) : new Date();
+    
+    console.log("✅ Receipt processed successfully:", data);
 
     return {
       title: data.title || "Receipt",
       amount: data.amount,
-      date: data.date,
+      date: receiptDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
       description: data.description,
       category: data.category,
       paymentMethod: data.paymentMethod,
@@ -318,6 +347,7 @@ export const scanReceiptService = async (
       receiptUrl: file.path,
     };
   } catch (error) {
-    return { error: "Reciept scanning  service unavailable" };
+    console.error("❌ Receipt scanning error:", error);
+    return { error: "Receipt scanning service unavailable" };
   }
 };
