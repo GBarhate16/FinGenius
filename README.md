@@ -22,6 +22,6 @@
 
 # Images 
 
-![Dashboard Screenshot](C:\Users\gaura\Desktop\AI saas\Advanced-MERN-AI-Financial-SaaS-Platform\client\src\assets\images\dashboard_.jpg)
+![Dashboard Screenshot](client/src/assets/images/dashboard_.jpg)
 
 
